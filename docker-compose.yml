@@ -1,0 +1,67 @@
+version: '3.6'
+services:
+  telegraf:
+    image: nuntz/telegraf-snmp
+    container_name: telegraf
+    restart: always
+    volumes:
+    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+    - '8125:8125'
+
+  influxdb:
+    image: influxdb:1.8-alpine
+    container_name: influxdb
+    restart: always
+    environment:
+      - INFLUXDB_DB=influx
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana-oss:6.7.6
+    container_name: grafana
+    restart: always
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_DOMAIN=braden-test.qc.aug888.com
+      - GF_SERVER_ENFORCE_DOMAIN=true
+      - GF_SERVER_ROOT_URL=https://braden-test.qc.aug888.com/
+      - GF_SERVER_CERT_FILE=/var/lib/grafana/ssl/grafana.crt 
+      - GF_SERVER_CERT_KEY=/var/lib/grafana/ssl/grafana.key 
+      - GF_AUTH_GOOGLE_ENABLED=true 
+      - GF_AUTH_GOOGLE_ALLOW_SIGN_UP=true
+      - GF_AUTH_GOOGLE_CLIENT_ID=659877727582-a6c7t17s0q9go5og2a87jbjan5djervp.apps.googleusercontent.com
+      - GF_AUTH_GOOGLE_CLIENT_SECRET=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
+      - GF_AUTH_GOOGLE_SCOPES=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email
+      - GF_AUTH_GOOGLE_AUTH_URL=https://accounts.google.com/o/oauth2/auth
+      - GF_AUTH_GOOGLE_TOKEN_URL=https://accounts.google.com/o/oauth2/token
+      - GF_AUTH_GOOGLE_API_URL=https://www.googleapis.com/oauth2/v1/userinfo
+      - GF_AUTH_GOOGLE_ALLOWED_DOMAINS=gmail.com,gosmio.biz
+    links:
+      - influxdb
+    ports:
+      - '443:3000'
+    volumes:
+      - ./data:/var/lib/grafana
+      - ./cof/grafana.ini:/etc/grafana/grafana.ini
+      
+volumes:
+  grafana_data: {}
+  influxdb_data: {}
+
+
+

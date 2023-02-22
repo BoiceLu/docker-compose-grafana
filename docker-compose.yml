@@ -40,9 +40,9 @@ services:
       - GF_SERVER_DOMAIN=braden-test.qc.aug888.com
       - GF_SERVER_ENFORCE_DOMAIN=true
       - GF_SERVER_ROOT_URL=https://braden-test.qc.aug888.com/
-      - GF_SERVER_CERT_FILE=/var/lib/grafana/ssl/grafana.crt 
-      - GF_SERVER_CERT_KEY=/var/lib/grafana/ssl/grafana.key 
-      - GF_AUTH_GOOGLE_ENABLED=true 
+      - GF_SERVER_CERT_FILE=/var/lib/grafana/ssl/grafana.crt
+      - GF_SERVER_CERT_KEY=/var/lib/grafana/ssl/grafana.key
+      - GF_AUTH_GOOGLE_ENABLED=true
       - GF_AUTH_GOOGLE_ALLOW_SIGN_UP=true
       - GF_AUTH_GOOGLE_CLIENT_ID=659877727582-a6c7t17s0q9go5og2a87jbjan5djervp.apps.googleusercontent.com
       - GF_AUTH_GOOGLE_CLIENT_SECRET=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
@@ -58,7 +58,7 @@ services:
     volumes:
       - ./data:/var/lib/grafana
       - ./cof/grafana.ini:/etc/grafana/grafana.ini
-      
+
 volumes:
   grafana_data: {}
   influxdb_data: {}
